@@ -7,7 +7,8 @@ import PersonIcon from "@material-ui/icons/Person";
 import { green } from "@material-ui/core/colors";
 import "./home.css";
 import Box from "@material-ui/core/Box";
-// import IconButton from "@material-ui/core/IconButton";
+import NavBarPage from "../../components/Navigation";
+import Container from "@material-ui/core/Container";
 import Snackbar from "@material-ui/core/Snackbar";
 // import CloseIcon from "@material-ui/icons/Close";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
@@ -18,12 +19,10 @@ function Alert(props: AlertProps) {
 
 interface IPageProps {
   homeThem: string;
+  handletoggleTheme: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      marginTop: 80,
-    },
     button: {
       marginTop: 40,
       marginBottom: 60,
@@ -49,15 +48,17 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: "bold",
     },
     subtitle: {
-      fontSize: 40,
+      fontSize: 30,
+      color: "orange",
     },
     p: {
-      fontSize: 20,
+      fontSize: 17,
+      wordSpacing: 2,
     },
   })
 );
 const HomePage: React.FunctionComponent<IPageProps> = (props) => {
-  const { homeThem } = props;
+  const { homeThem, handletoggleTheme } = props;
   const classes = useStyles();
   // const [open, setOpen] = React.useState(false);
   const [openSnack, setSnackOpen] = React.useState(false);
@@ -91,7 +92,8 @@ const HomePage: React.FunctionComponent<IPageProps> = (props) => {
   ];
 
   return (
-    <div className={classes.root}>
+    <>
+      <NavBarPage theme={homeThem} handletoggleTheme={handletoggleTheme} />
       <Grid container spacing={3}>
         <Snackbar
           anchorOrigin={{
@@ -107,85 +109,90 @@ const HomePage: React.FunctionComponent<IPageProps> = (props) => {
           </Alert>
         </Snackbar>
         <Grid item xs={12} lg={6}>
-          <Typography>
-            <div className={classes.title}>Adedayo Adegboye</div>
-            <div className={classes.subtitle}>Sofware Developer</div>
-          </Typography>
-          <Typography>
-            <p className={classes.p}>
-              Versatile in using different various languages and platform. We do
-              private projects at an affordable flexible prices . Book a free
-              appointment with one of our consultants
-            </p>
-          </Typography>
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={() =>
-              window.open(
-                "https://calendly.com/imak-appointment/15min",
-                "_blank"
-              )
-            }
-          >
-            <PersonIcon /> &nbsp;&nbsp; BOOK AN APPOINTMENT
-          </Button>
-          <div>
-            <Grid direction="row" className="social-menu ">
-              <a
-                href="https://www.linkedin.com/in/majeed-adegboye-47189142/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {" "}
-                <i className="fab fa-linkedin"></i>
-              </a>
-              <i onClick={handleClick} className="fab fa-twitter"></i>
-              <a
-                href="https://www.facebook.com/dayo.adegboye"
-                rel="noreferrer"
-                target="_blank"
-              >
-                <i className="fab fa-facebook"></i>
-              </a>
-              <i onClick={handleClick} className="fab fa-instagram"></i>
-            </Grid>
-          </div>
-          <div>
-            <div style={{ fontWeight: "bold", marginBottom: 25 }}>
-              LANGUAGES AND FRAMEWORK
-            </div>
-            {/* <span style={{ marginBottom: 30 }}>Click to see details</span> */}
+          <Container>
+            <Typography>
+              <div style={{ marginTop: 100 }} className={classes.title}>
+                Adedayo Adegboye
+              </div>
+              <div className={classes.subtitle}>Sofware Developer</div>
+            </Typography>
+            <Typography>
+              <p className={classes.p}>
+                Versatile in using different various languages and platform. We
+                do private projects at an affordable flexible prices . Book a
+                free appointment with one of our consultants
+              </p>
+            </Typography>
+            <Button
+              variant="contained"
+              className={classes.button}
+              onClick={() =>
+                window.open(
+                  "https://calendly.com/imak-appointment/15min",
+                  "_blank"
+                )
+              }
+            >
+              <PersonIcon /> &nbsp;&nbsp; BOOK AN APPOINTMENT
+            </Button>
             <div>
-              {list.map((item, index) => {
-                return (
-                  <span>
-                    <Button
-                      variant="contained"
-                      className={classes.buttonList}
-                      key={index}
-                      style={{
-                        backgroundColor:
-                          homeThem === "dark" ? item.color : "#0f85a3",
-                      }}
-                      // onClick={handleOpen}
-                    >
-                      {item.title}
-                    </Button>
-                    {/* <ModalPage
+              <Grid direction="row" className="social-menu ">
+                <a
+                  href="https://www.linkedin.com/in/majeed-adegboye-47189142/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {" "}
+                  <i className="fab fa-linkedin"></i>
+                </a>
+                <i onClick={handleClick} className="fab fa-twitter"></i>
+                <a
+                  href="https://www.facebook.com/dayo.adegboye"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <i className="fab fa-facebook"></i>
+                </a>
+                <i onClick={handleClick} className="fab fa-instagram"></i>
+              </Grid>
+            </div>
+            <div>
+              <div style={{ fontWeight: "bold", marginBottom: 25 }}>
+                LANGUAGES AND FRAMEWORK
+              </div>
+              {/* <span style={{ marginBottom: 30 }}>Click to see details</span> */}
+              <div>
+                {list.map((item, index) => {
+                  return (
+                    <span>
+                      <Button
+                        variant="contained"
+                        className={classes.buttonList}
+                        key={index}
+                        style={{
+                          backgroundColor:
+                            homeThem === "dark" ? item.color : "#0f85a3",
+                        }}
+                        // onClick={handleOpen}
+                      >
+                        {item.title}
+                      </Button>
+                      {/* <ModalPage
                       modalOpen={open}
                       handleClose={() => handleClose()}
                       modalContext={item.title}
                     /> */}
-                  </span>
-                );
-              })}
+                    </span>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          </Container>
         </Grid>
         <Grid item xs={12} lg={6}>
           <Box component={Grid} display={{ xs: "none", lg: "block" }}>
             <img
+              style={{ marginTop: 100 }}
               width="650"
               height="650"
               src={process.env.PUBLIC_URL + "abstract.png"}
@@ -194,7 +201,7 @@ const HomePage: React.FunctionComponent<IPageProps> = (props) => {
           </Box>
         </Grid>
       </Grid>
-    </div>
+    </>
   );
 };
 

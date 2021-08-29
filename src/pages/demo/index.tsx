@@ -1,4 +1,5 @@
 import {
+  Container,
   createStyles,
   Grid,
   makeStyles,
@@ -10,13 +11,16 @@ import React from "react";
 import MediaCard from "../../components/mediaCard";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import NavBarPage from "../../components/Navigation";
 
-interface IPageProps {}
+interface IPageProps {
+  homeThem: string;
+  handletoggleTheme: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      marginTop: 100,
       justifyContent: "center",
       alignContent: "center",
       justify: "center",
@@ -48,7 +52,7 @@ const responsive = {
 
 var items = [
   {
-    target: "https://www.npmjs.com/package/react-material-ui-carousel",
+    target: "https://imak-tech.netlify.app/",
     title: "iMak",
     status: "live",
     content: "iMak portfolio!",
@@ -126,48 +130,51 @@ var GitItems = [
 
 const DemoPage: React.FunctionComponent<IPageProps> = (props) => {
   const classes = useStyles();
-
+  const { homeThem, handletoggleTheme } = props;
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Typography style={{ marginTop: 30 }}>Apps</Typography>
-        <Grid item xs={12} lg={12}>
-          <Carousel
-            responsive={responsive}
-            itemClass="carousel-item-padding-40-px"
-          >
-            {items.map((item, i) => (
-              <MediaCard
-                key={i}
-                title={item.title}
-                content={item.content}
-                status={item.status}
-                media={item.media}
-                target={item.target}
-              />
-            ))}
-          </Carousel>
+    <>
+      <NavBarPage theme={homeThem} handletoggleTheme={handletoggleTheme} />
+      <Container className={classes.root}>
+        <Grid container spacing={3}>
+          <Typography style={{ marginTop: 150 }}>Apps</Typography>
+          <Grid item xs={12} lg={12}>
+            <Carousel
+              responsive={responsive}
+              itemClass="carousel-item-padding-40-px"
+            >
+              {items.map((item, i) => (
+                <MediaCard
+                  key={i}
+                  title={item.title}
+                  content={item.content}
+                  status={item.status}
+                  media={item.media}
+                  target={item.target}
+                />
+              ))}
+            </Carousel>
+          </Grid>
+          <Typography style={{ marginTop: 50 }}>Codes</Typography>
+          <Grid item xs={12} lg={12}>
+            <Carousel
+              responsive={responsive}
+              itemClass="carousel-item-padding-40-px"
+            >
+              {GitItems.map((item, i) => (
+                <MediaCard
+                  key={i}
+                  title={item.title}
+                  content={item.content}
+                  status={item.status}
+                  media={item.media}
+                  target={item.target}
+                />
+              ))}
+            </Carousel>
+          </Grid>
         </Grid>
-        <Typography style={{ marginTop: 50 }}>Codes</Typography>
-        <Grid item xs={12} lg={12}>
-          <Carousel
-            responsive={responsive}
-            itemClass="carousel-item-padding-40-px"
-          >
-            {GitItems.map((item, i) => (
-              <MediaCard
-                key={i}
-                title={item.title}
-                content={item.content}
-                status={item.status}
-                media={item.media}
-                target={item.target}
-              />
-            ))}
-          </Carousel>
-        </Grid>
-      </Grid>
-    </div>
+      </Container>
+    </>
   );
 };
 
