@@ -93,21 +93,21 @@ const HomePage: React.FunctionComponent<IPageProps> = (props) => {
 
   return (
     <>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+      >
+        <Alert onClose={handleCloseSnack} severity="warning">
+          Service currently unavailable!
+        </Alert>
+      </Snackbar>
       <NavBarPage theme={homeThem} handletoggleTheme={handletoggleTheme} />
-      <Grid container spacing={3}>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          open={openSnack}
-          autoHideDuration={6000}
-          onClose={handleCloseSnack}
-        >
-          <Alert onClose={handleCloseSnack} severity="warning">
-            Service currently unavailable!
-          </Alert>
-        </Snackbar>
+      <Grid container spacing={3} style={{ bottom: 120, marginBottom: 120 }}>
         <Grid item xs={12} lg={6}>
           <Container>
             <Typography>
@@ -172,6 +172,7 @@ const HomePage: React.FunctionComponent<IPageProps> = (props) => {
                         style={{
                           backgroundColor:
                             homeThem === "dark" ? item.color : "#0f85a3",
+                          textTransform: "capitalize",
                         }}
                         // onClick={handleOpen}
                       >

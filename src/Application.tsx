@@ -6,6 +6,7 @@ import clsx from "clsx";
 import Typography from "@material-ui/core/Typography";
 import DemoPage from "./pages/demo";
 import InfoPage from "./pages/info";
+import TermsPage from "./pages/terms";
 import imak from "./assets/images/imak.png";
 import mediaP from "./assets/images/heli7.jpg";
 import UpIcon from "@material-ui/icons/KeyboardArrowUp";
@@ -58,10 +59,10 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
   },
   fab: {
-    position: "absolute",
+    position: "fixed",
     bottom: theme.spacing(2),
     right: theme.spacing(2),
-    // marginBottom: 120,
+    marginBottom: 100,
   },
   fabGreen: {
     color: theme.palette.common.white,
@@ -69,6 +70,14 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: green[600],
     },
+  },
+  float: {
+    margin: 0,
+    top: "auto",
+    right: 20,
+    bottom: 20,
+    left: "auto",
+    position: "fixed",
   },
   media: {
     height: 0,
@@ -138,7 +147,12 @@ const Application: React.FunctionComponent<IApplicationProps> = (props) => {
                   handletoggleTheme={() => handletoggleTheme()}
                 />
               </Container>,
-              <Typography>Terms</Typography>,
+              <Container>
+                <TermsPage
+                  homeThem={theme.palette.type}
+                  handletoggleTheme={() => handletoggleTheme()}
+                />
+              </Container>,
             ][selected]
           }
           <Container>
@@ -178,6 +192,7 @@ const Application: React.FunctionComponent<IApplicationProps> = (props) => {
               </Grid>
             </Grid>
           </Container>
+
           <Fab
             aria-label="chat"
             className={clsx(classes.fab, classes.fabGreen)}

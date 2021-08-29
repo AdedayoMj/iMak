@@ -7,9 +7,8 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Snackbar,
 } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+
 import React from "react";
 
 interface ICardMediaProps {
@@ -18,6 +17,7 @@ interface ICardMediaProps {
   content: string;
   status: string;
   target: string;
+  handleClickSnack: (event: string) => void;
 }
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,45 +34,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const MediaCard: React.FunctionComponent<ICardMediaProps> = (props) => {
-  const { media, title, content, status, target } = props;
+  const { media, title, content, status, target, handleClickSnack } = props;
   const classes = useStyles();
-  const [openSnack, setSnackOpen] = React.useState(false);
 
-  const handleSnack = () => {
-    setSnackOpen(true);
-  };
-
-  const handleCloseSnack = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setSnackOpen(false);
-  };
-  const handleClick = () => {
-    if (target !== "") {
-      window.open(`${target}`, "_blank");
-    } else {
-      handleSnack();
-    }
-  };
   return (
     <div>
-      <Snackbar
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        open={openSnack}
-        autoHideDuration={6000}
-        onClose={handleCloseSnack}
-      >
-        <Alert onClose={handleCloseSnack} severity="info">
-          The software still in development!
-        </Alert>
-      </Snackbar>
-
-      <Card className={classes.root} onClick={handleClick}>
+      <Card className={classes.root} onClick={() => handleClickSnack(target)}>
         <CardActionArea>
           <CardMedia
             className={classes.media}

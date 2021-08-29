@@ -7,13 +7,15 @@ import {
   Container,
   Button,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PersonIcon from "@material-ui/icons/Person";
 import NavBarPage from "../../components/Navigation";
 import { green, grey } from "@material-ui/core/colors";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import RoomIcon from "@material-ui/icons/Room";
+import { loadMapApi } from "../../utils/googlemapUtils";
+import Map from "../../components/map";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -27,7 +29,7 @@ interface IPageProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      marginTop: 150,
+      marginTop: 10,
     },
 
     button: {
@@ -39,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       fontSize: 30,
+      marginTop: 150,
       fontWeight: "bold",
     },
     p: {
@@ -59,6 +62,8 @@ const InfoPage: React.FunctionComponent<IPageProps> = (props) => {
   const classes = useStyles();
   const { homeThem, handletoggleTheme } = props;
   const [openSnack, setSnackOpen] = React.useState(false);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [distanceInKm, setDistanceInKm] = useState<number>(-1);
 
   const handleClick = () => {
     setSnackOpen(true);
@@ -71,6 +76,22 @@ const InfoPage: React.FunctionComponent<IPageProps> = (props) => {
 
     setSnackOpen(false);
   };
+
+  useEffect(() => {
+    const googleMapScript = loadMapApi();
+    googleMapScript.addEventListener("load", function () {
+      setScriptLoaded(true);
+    });
+  }, []);
+
+  const renderDistanceSentence = () => {
+    return (
+      <div className="distance-info">
+        {`Distance between selected marker and home address is ${distanceInKm}km.`}
+      </div>
+    );
+  };
+
   return (
     <>
       <Snackbar
@@ -87,7 +108,7 @@ const InfoPage: React.FunctionComponent<IPageProps> = (props) => {
         </Alert>
       </Snackbar>
       <NavBarPage theme={homeThem} handletoggleTheme={handletoggleTheme} />
-      <div className={classes.root}>
+      <div>
         <Container>
           <Grid container spacing={3}>
             <Grid item xs={12} lg={6}>
@@ -151,6 +172,15 @@ const InfoPage: React.FunctionComponent<IPageProps> = (props) => {
                     Harju County, Estonia
                   </Typography>
                 </div>
+
+                {scriptLoaded && (
+                  <Map
+                    mapType={google.maps.MapTypeId.ROADMAP}
+                    mapTypeControl={true}
+                    setDistanceInKm={setDistanceInKm}
+                  />
+                )}
+                {distanceInKm > -1 && renderDistanceSentence()}
               </Container>
             </Grid>
           </Grid>

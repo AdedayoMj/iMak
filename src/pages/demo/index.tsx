@@ -3,6 +3,7 @@ import {
   createStyles,
   Grid,
   makeStyles,
+  Snackbar,
   Theme,
   Typography,
 } from "@material-ui/core";
@@ -12,6 +13,11 @@ import MediaCard from "../../components/mediaCard";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import NavBarPage from "../../components/Navigation";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 interface IPageProps {
   homeThem: string;
@@ -21,15 +27,11 @@ interface IPageProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      justifyContent: "center",
       alignContent: "center",
       justify: "center",
+      bottom: 120,
+      marginBottom: 120,
     },
-    // paper: {
-    //   padding: theme.spacing(3),
-    //   textAlign: "center",
-    //   color: theme.palette.text.secondary,
-    // },
   })
 );
 const responsive = {
@@ -131,8 +133,41 @@ var GitItems = [
 const DemoPage: React.FunctionComponent<IPageProps> = (props) => {
   const classes = useStyles();
   const { homeThem, handletoggleTheme } = props;
+  const [openSnack, setSnackOpen] = React.useState(false);
+
+  const handleSnack = () => {
+    setSnackOpen(true);
+  };
+
+  const handleCloseSnack = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnackOpen(false);
+  };
+  const handleClickSnack = (options: string) => {
+    if (options !== "") {
+      window.open(`${options}`, "_blank");
+    } else {
+      handleSnack();
+    }
+  };
   return (
     <>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+      >
+        <Alert onClose={handleCloseSnack} severity="info">
+          The software still in development!
+        </Alert>
+      </Snackbar>
       <NavBarPage theme={homeThem} handletoggleTheme={handletoggleTheme} />
       <Container className={classes.root}>
         <Grid container spacing={3}>
@@ -150,6 +185,7 @@ const DemoPage: React.FunctionComponent<IPageProps> = (props) => {
                   status={item.status}
                   media={item.media}
                   target={item.target}
+                  handleClickSnack={() => handleClickSnack(item.target)}
                 />
               ))}
             </Carousel>
@@ -168,6 +204,7 @@ const DemoPage: React.FunctionComponent<IPageProps> = (props) => {
                   status={item.status}
                   media={item.media}
                   target={item.target}
+                  handleClickSnack={() => handleClickSnack(item.target)}
                 />
               ))}
             </Carousel>
