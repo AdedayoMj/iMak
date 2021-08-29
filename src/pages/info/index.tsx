@@ -7,15 +7,15 @@ import {
   Container,
   Button,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PersonIcon from "@material-ui/icons/Person";
 import NavBarPage from "../../components/Navigation";
 import { green, grey } from "@material-ui/core/colors";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import RoomIcon from "@material-ui/icons/Room";
-import { loadMapApi } from "../../utils/googlemapUtils";
-import Map from "../../components/map";
+import mapStyles from "./mapstyles";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -62,8 +62,6 @@ const InfoPage: React.FunctionComponent<IPageProps> = (props) => {
   const classes = useStyles();
   const { homeThem, handletoggleTheme } = props;
   const [openSnack, setSnackOpen] = React.useState(false);
-  const [scriptLoaded, setScriptLoaded] = useState(false);
-  const [distanceInKm, setDistanceInKm] = useState<number>(-1);
 
   const handleClick = () => {
     setSnackOpen(true);
@@ -76,20 +74,36 @@ const InfoPage: React.FunctionComponent<IPageProps> = (props) => {
 
     setSnackOpen(false);
   };
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
+  });
 
-  useEffect(() => {
-    const googleMapScript = loadMapApi();
-    googleMapScript.addEventListener("load", function () {
-      setScriptLoaded(true);
-    });
-  }, []);
+  //save map in ref is we want access the map
 
-  const renderDistanceSentence = () => {
-    return (
-      <div className="distance-info">
-        {`Distance between selected marker and home address is ${distanceInKm}km.`}
-      </div>
-    );
+  const mapRef = React.useRef<google.maps.Map<Element> | null>(null);
+
+  const onLoad = (map: google.maps.Map<Element>): void => {
+    mapRef.current = map;
+  };
+
+  const unMount = (): void => {
+    mapRef.current = null;
+  };
+
+  const googleStyle = {
+    height: "35vh",
+    width: "100%",
+  };
+
+  const intialStartTallinn = {
+    lat: 59.393269,
+    lng: 24.651899,
+  };
+  const options = {
+    styles: mapStyles,
+    disableDefaultUI: false,
+    zoomControl: true,
   };
 
   return (
@@ -129,7 +143,7 @@ const InfoPage: React.FunctionComponent<IPageProps> = (props) => {
               </Container>
             </Grid>
             <Grid item xs={12} lg={6}>
-              <Container>
+              <Container style={{ marginBottom: 100 }}>
                 <Typography className={classes.title}> Conatct Us</Typography>
                 <div>
                   <Button
@@ -172,15 +186,26 @@ const InfoPage: React.FunctionComponent<IPageProps> = (props) => {
                     Harju County, Estonia
                   </Typography>
                 </div>
-
-                {scriptLoaded && (
-                  <Map
-                    mapType={google.maps.MapTypeId.ROADMAP}
-                    mapTypeControl={true}
-                    setDistanceInKm={setDistanceInKm}
-                  />
+                {!isLoaded ? (
+                  <div>Map loading...</div>
+                ) : (
+                  <GoogleMap
+                    mapContainerStyle={googleStyle}
+                    options={options as google.maps.MapOptions}
+                    center={intialStartTallinn}
+                    zoom={12}
+                    onLoad={onLoad}
+                    onUnmount={unMount}
+                  >
+                    <Marker
+                      key="marker_1"
+                      position={{
+                        lat: 59.393269,
+                        lng: 24.651899,
+                      }}
+                    />
+                  </GoogleMap>
                 )}
-                {distanceInKm > -1 && renderDistanceSentence()}
               </Container>
             </Grid>
           </Grid>
