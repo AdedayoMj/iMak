@@ -118,9 +118,9 @@ const HomePage: React.FunctionComponent<IPageProps> = (props) => {
             </Typography>
             <Typography>
               <p className={classes.p}>
-                Versatile in using different various languages and platform. We
-                do private projects at an affordable flexible prices . Book a
-                free appointment with one of our consultants
+                Versatile in using different languages and platform. We do
+                private projects at an affordable flexible prices. Book a free
+                appointment with one of our consultants.
               </p>
             </Typography>
             <Button
